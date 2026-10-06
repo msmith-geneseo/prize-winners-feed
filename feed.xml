@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title> </title>
+  <description>Prize Winners Feed</description>
+  <link>https://example.com</link>
+  <item>
+    <title>Lorem ipsum dolor sit amet consectetur adipiscing elit. Dolor sit amet consectetur adipiscing elit quisque faucibus.</title>
+    <guid>1</guid>
+  </item>
+</channel>
+</rss>
