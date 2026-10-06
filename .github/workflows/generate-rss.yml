@@ -1,0 +1,58 @@
+name: Generate RSS Feed
+
+on:
+  push:
+    paths:
+      - "winners.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-feed:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate RSS
+        run: |
+          cat > feed.xml << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <rss version="2.0">
+          <channel>
+            <title> </title>
+            <description>Prize Winners Feed</description>
+            <link>https://example.com</link>
+          EOF
+
+          COUNT=1
+
+          while IFS= read -r line
+          do
+            if [ ! -z "$line" ]; then
+              cat >> feed.xml << EOF
+            <item>
+              <title>${line}</title>
+              <guid>${COUNT}</guid>
+            </item>
+          EOF
+              COUNT=$((COUNT+1))
+            fi
+          done < winners.txt
+
+          cat >> feed.xml << 'EOF'
+          </channel>
+          </rss>
+          EOF
+
+      - name: Commit feed
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add feed.xml
+
+          git diff --cached --quiet || git commit -m "Update RSS feed"
+          git push
